@@ -7,6 +7,15 @@ type StopTime = {
   label: number;
 };
 
+type StopReport = {
+  header: {
+    name: string;
+    dest: string;
+    publish: string;
+  };
+  times: StopTime[];
+};
+
 const kUrl =
   "https://script.google.com/macros/s/AKfycbwdm0nmrVJdptlecVeL0VrGfLJz2DyJ65qv-aFcixFtB5-kyJ0rfJLE7yBShRlM0B14tg/exec";
 
@@ -45,7 +54,7 @@ const queryParams = (): StopTimeQueryParams => {
 
 export const StopTimeReport: FC = () => {
   const [isLoaded, setLoaded] = useState(false);
-  const [data, setData] = useState<StopTime[]>([]);
+  const [data, setData] = useState<StopReport | null>(null);
 
   useEffect(() => {
     if (isLoaded) {
@@ -56,11 +65,13 @@ export const StopTimeReport: FC = () => {
       .then((resp) => {
         return resp.json();
       })
-      .then((json: StopTime[]) => {
+      .then(({ header, times }: StopReport) => {
         const params = queryParams();
-        return json
+
+        const filteredTimes = times
           .filter(stopTimeQuery(params))
           .sort(byStopTimeIndexAscending);
+        return { header, times: filteredTimes };
       })
       .then((stopTimes) => {
         setLoaded(true);
@@ -69,13 +80,26 @@ export const StopTimeReport: FC = () => {
   }, [isLoaded]);
 
   return (
-    <>
-      {isLoaded ?? <div className="loading">{"loading..."}</div>}
-      {data.length > 0 && (
-        <div>
-          {data.map((item) => {
+    <div>
+      {!isLoaded && <div className="loading">{"loading..."}</div>}
+      {data && (
+        <div className="header centerAlignedColumn">
+          <div className="stopNameLabel">{data.header.name}</div>
+          <div className="destinationLabel">{data.header.dest}</div>
+        </div>
+      )}
+      {data && data.times.length > 0 && (
+        <div className="stopTimeList centerAlignedColumn">
+          {data.times.map((item, i) => {
+            console.log(item);
             return (
-              <div key={item.index}>
+              <div
+                key={item.index}
+                style={{
+                  fontSize: `${64 - 12.8 * i}px`,
+                }}
+                className={i === 0 ? "firstTime" : "laterTime"}
+              >
                 <span>{item.hour}</span>
                 <span>:</span>
                 <span>{item.minute}</span>
@@ -85,6 +109,6 @@ export const StopTimeReport: FC = () => {
           })}
         </div>
       )}
-    </>
+    </div>
   );
 };

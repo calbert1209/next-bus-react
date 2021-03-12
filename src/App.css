@@ -1,6 +1,17 @@
-
+:root {
+  --green700: #388e3c;
+  --green500: #4caf50;
+  --green300: #81c784;
+  --cyan700: #0097a7;
+  --blue700: #1976d2;
+  --deepOrange300: #ff7043;
+  --amber500: #ffc107;
+  --black700: #26282e;
+  --black500: #373740;
+  --black300: #424247;
+}
 .App {
-  background-color: #282c34;
+  background-color: var(--black500);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -20,11 +31,61 @@
 }
 
 .loading {
-  color: seagreen;
+  color: var(--green500);
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .loading {
     animation: LoadingThrob infinite alternate 1s linear;
   }
+}
+
+.centerAlignedColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header {
+  margin: 10px;
+  font-size: 32px;
+}
+
+.destinationLabel {
+  color: var(--green700);
+}
+
+.stopTimeList {
+  background-color: var(--black700);
+  padding: 10px;
+}
+
+.firstTime {
+  color: var(--green700);
+}
+
+.laterTime {
+  color: var(--green300);
+}
+
+.relative {
+  position: static;
+}
+
+.countDown {
+  position: absolute;
+  top: 0;
+  height: 100vh;
+  left: 0;
+  width: 50px;
+  box-sizing: border-box;
+  border-right: 20px solid var(--black700);
+  background-color: var(--black700);
+  background: repeating-linear-gradient(
+    180deg,
+    var(--black300),
+    var(--black300) 1px,
+    var(--black700) 1px,
+    var(--black700) calc(5vh - 2px)
+  );
 }
