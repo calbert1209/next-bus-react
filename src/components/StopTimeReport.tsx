@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 
 type StopTime = {
   index: number;
@@ -8,22 +8,16 @@ type StopTime = {
   note?: string;
 };
 
-type StopReport = {
-  header: {
-    busStop: string;
-    dest: string;
-    publish: string;
-  };
-  times: StopTime[];
+type StopReportHeader = {
+  busStop: string;
+  dest: string;
+  publish: string;
 };
 
-const { search } = window.location;
-const queryString = search.length > 0 ? search : "dest=Totsuka";
-
-const kUrl =
-  "https://script.google.com/macros/s/" +
-  "AKfycbwdm0nmrVJdptlecVeL0VrGfLJz2DyJ65qv-aFcixFtB5-kyJ0rfJLE7yBShRlM0B14tg/exec" +
-  `${queryString}`;
+export type StopReport = {
+  header: StopReportHeader;
+  times: StopTime[];
+};
 
 function getTodaysLabel(dayofWeek: number) {
   if (dayofWeek > 0 && dayofWeek < 6) {
@@ -43,7 +37,9 @@ const byStopTimeIndexAscending = (a: StopTime, b: StopTime): number =>
 const stopTimeQuery = ({ index, label }: StopTimeQueryParams) => (
   time: StopTime
 ) => {
-  return time.label === label && time.index > index && time.index <= index + 60;
+  return (
+    time.label === label && time.index > index && time.index <= index + 120
+  );
 };
 
 type StopTimeQueryParams = {
@@ -58,74 +54,52 @@ const queryParams = (): StopTimeQueryParams => {
   return { index, label };
 };
 
-export const StopTimeReport: FC = () => {
-  const [isLoaded, setLoaded] = useState(false);
-  const [data, setData] = useState<StopReport | null>(null);
-
-  useEffect(() => {
-    if (isLoaded) {
-      return;
-    }
-    window
-      .fetch(kUrl)
-      .then((resp) => {
-        return resp.json();
-      })
-      .then((report: StopReport) => {
-        const { header, times } = report;
-        const params = queryParams();
-
-        const filteredTimes = times
-          .filter(stopTimeQuery(params))
-          .sort(byStopTimeIndexAscending)
-          .slice(0, 4);
-        if (filteredTimes.length < 1) {
-          console.warn("no times found");
-        }
-        return { header, times: filteredTimes };
-      })
-      .then((stopTimes) => {
-        setLoaded(true);
-        setData(stopTimes);
-      });
-  }, [isLoaded]);
-
+export const BusStopHeader: FC<{ headerData: StopReportHeader }> = ({
+  headerData: { busStop, dest },
+}) => {
   return (
-    <div className="stopTimeReport">
-      {!isLoaded && <div className="loading">{"loading..."}</div>}
-      {data && (
-        <div className="header centerAlignedColumn">
-          <div className="stopNameLabel">{data.header.busStop}</div>
-          <div className="destinationLabel">{data.header.dest}</div>
-          <div className="currentTime">{"08:13"}</div>
-        </div>
-      )}
-      {data && data.times.length > 0 && (
-        <div className="stopTimeList">
-          {data.times.map((item, i) => {
-            console.log(item);
-            return (
-              <div
-                key={`${item.index}-${item.note}`}
-                className="stopTimeRow"
-                data-row={i}
-                style={{
-                  fontSize: `${4 - i}em`,
-                }}
-              >
-                <div className="hour">{item.hour}</div>
-                <div className="colon">:</div>
-                <div className="minuteAndNote">
-                  <div className="minute">{item.minute}</div>
-                  {item.note && (
-                    <div className="stopTimeNote">{` (${item.note})`}</div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
+    <div className="header centerAlignedColumn">
+      <div className="stopNameLabel">{busStop}</div>
+      <div className="destinationLabel">{dest}</div>
+      <div className="currentTime">{"08:13"}</div>
+    </div>
+  );
+};
+
+export const StopTimeList: FC<{ fullList: StopTime[] }> = ({ fullList }) => {
+  const params = queryParams();
+
+  const times = fullList
+    .filter(stopTimeQuery(params))
+    .sort(byStopTimeIndexAscending)
+    .slice(0, 4);
+  if (times.length < 1) {
+    console.warn("no times found");
+  }
+  return (
+    <div className="stopTimeList">
+      {times.map((item, i) => {
+        console.log(item);
+        return (
+          <div
+            key={`${item.index}-${item.note}`}
+            className="stopTimeRow"
+            data-row={i}
+            style={{
+              fontSize: `${4 - i}em`,
+            }}
+          >
+            <div className="hour">{item.hour}</div>
+            <div className="colon">:</div>
+            <div className="minuteAndNote">
+              <div className="minute">{item.minute}</div>
+              {item.note && (
+                <div className="stopTimeNote">{` (${item.note})`}</div>
+              )}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 };

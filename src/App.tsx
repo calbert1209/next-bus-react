@@ -1,10 +1,52 @@
+import { useEffect, useState } from "react";
 import "./App.css";
-import { StopTimeReport } from "./components/StopTimeReport";
+import { BusStopHeader, StopReport, StopTimeList } from "./components/StopTimeReport";
+
+const { search } = window.location;
+const queryString = search.length > 0 ? search : "dest=Totsuka";
+
+const kUrl =
+  "https://script.google.com/macros/s/" +
+  "AKfycbwdm0nmrVJdptlecVeL0VrGfLJz2DyJ65qv-aFcixFtB5-kyJ0rfJLE7yBShRlM0B14tg/exec" +
+  `${queryString}`;
+
 
 function App() {
+
+  const [isLoaded, setLoaded] = useState(false);
+  const [data, setData] = useState<StopReport | null>(null);
+
+  useEffect(() => {
+    if (isLoaded) {
+      return;
+    }
+    window
+      .fetch(kUrl)
+      .then((resp) => {
+        return resp.json();
+      })
+      .then((report: StopReport) => {
+        const { header, times } = report;
+
+        return { header, times };
+      })
+      .then((stopTimes) => {
+        setLoaded(true);
+        setData(stopTimes);
+      });
+  }, [isLoaded]);
+  
   return (
     <div className="App">
-      <StopTimeReport />
+      <div className="stopTimeReport">
+      {!isLoaded && <div className="loading">{"loading..."}</div>}
+      {data && (
+        <>
+          <BusStopHeader headerData={data.header} />
+          <StopTimeList fullList={data.times} />
+        </>
+      )}
+    </div>
     </div>
   );
 }
