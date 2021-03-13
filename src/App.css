@@ -1,9 +1,20 @@
 :root {
-  --green700: #388e3c;
-  --green500: #4caf50;
   --green300: #81c784;
+  --green500: #4caf50;
+  --green700: #388e3c;
+  --green900: #1b5e20;
+  --cyan300: #4dd0e1;
+  --cyan500: #00bcd4;
   --cyan700: #0097a7;
+  --cyan900: #006064;
+  --teal300: #4db6ac;
+  --teal500: #009688;
+  --teal700: #00796b;
+  --teal900: #004d40;
+  --blue300: #64b5f6;
+  --blue500: #2196f3;
   --blue700: #1976d2;
+  --blue900: #0d47a1;
   --deepOrange300: #ff7043;
   --amber500: #ffc107;
   --black700: #26282e;
@@ -11,15 +22,29 @@
   --black300: #424247;
   --roundSanSerif: "Kosugi Maru", sans-serif;
 }
+
 .App {
+  --primary300: var(--teal300);
+  --primary500: var(--teal500);
+  --primary700: var(--teal700);
+  --primary900: var(--teal900);
+
   background-color: var(--black500);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-family: var(--roundSanSerif);
   font-size: calc(10px + 2vmin);
   color: white;
   padding-top: 20px;
+}
+
+.App[data-dest="ofuna"] {
+  --primary300: var(--blue300);
+  --primary500: var(--blue500);
+  --primary700: var(--blue700);
+  --primary900: var(--blue900);
 }
 
 @keyframes loadingThrob {
@@ -32,7 +57,7 @@
 }
 
 .loading {
-  color: var(--green500);
+  color: var(--primary500);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -50,12 +75,11 @@
 .header {
   margin: 10px;
   font-size: 2em;
-  font-family: var(--roundSanSerif);
   line-height: 1.4em;
 }
 
 .destinationLabel {
-  color: var(--green700);
+  color: var(--primary700);
   font-size: 0.8em;
 }
 
@@ -64,18 +88,17 @@
   border-radius: 4px;
   border: 1px solid var(--black300);
   padding: 10px;
-  font-family: var(--roundSanSerif);
 }
 
 .stopTimeRow {
-  color: var(--green300);
+  color: var(--primary300);
   display: grid;
   grid-template-columns: 44% 10% min-content auto;
   padding: 8px;
 }
 
 .stopTimeRow:first-child {
-  color: var(--green700);
+  color: var(--primary700);
 }
 
 .hour {
@@ -125,10 +148,10 @@
 @keyframes colonThrob {
   from {
     opacity: 1;
-    text-shadow: 0 0 3px white;
+    text-shadow: 0 0 1px white;
   }
   to {
-    opacity: 0.5;
+    opacity: 0.2;
     text-shadow: 0 0 0px white;
   }
 }

@@ -36,9 +36,12 @@ function App() {
         setData(stopTimes);
       });
   }, [isLoaded]);
+
+  const [_unused, rawDest] = queryString.split("=");
+  const dest = rawDest.toLowerCase() ?? "totsuka";
   
   return (
-    <div className="App">
+    <div className="App" data-dest={dest}>
       <div className="stopTimeReport">
       {!isLoaded && <div className="loading">{"loading..."}</div>}
       {data && (

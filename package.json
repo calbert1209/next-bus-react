@@ -21,7 +21,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "fmt": "prettier -w ./src/**/*.ts*"
+    "fmt": "prettier -w ./src/**/*.ts*",
+    "fmt-css": "prettier -w ./src/**/*.css"
   },
   "eslintConfig": {
     "extends": [
