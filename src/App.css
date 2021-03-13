@@ -68,6 +68,10 @@
   color: var(--green300);
 }
 
+.stopTimeNote {
+  font-size: 12px;
+}
+
 .relative {
   position: static;
 }

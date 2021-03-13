@@ -5,19 +5,25 @@ type StopTime = {
   hour: number;
   minute: number;
   label: number;
+  note?: string;
 };
 
 type StopReport = {
   header: {
-    name: string;
+    busStop: string;
     dest: string;
     publish: string;
   };
   times: StopTime[];
 };
 
+const { search } = window.location;
+const queryString = search.length > 0 ? search : "dest=Totsuka";
+
 const kUrl =
-  "https://script.google.com/macros/s/AKfycbwdm0nmrVJdptlecVeL0VrGfLJz2DyJ65qv-aFcixFtB5-kyJ0rfJLE7yBShRlM0B14tg/exec";
+  "https://script.google.com/macros/s/" +
+  "AKfycbwdm0nmrVJdptlecVeL0VrGfLJz2DyJ65qv-aFcixFtB5-kyJ0rfJLE7yBShRlM0B14tg/exec" +
+  `${queryString}`;
 
 function getTodaysLabel(dayofWeek: number) {
   if (dayofWeek > 0 && dayofWeek < 6) {
@@ -65,12 +71,17 @@ export const StopTimeReport: FC = () => {
       .then((resp) => {
         return resp.json();
       })
-      .then(({ header, times }: StopReport) => {
+      .then((report: StopReport) => {
+        const { header, times } = report;
         const params = queryParams();
 
         const filteredTimes = times
           .filter(stopTimeQuery(params))
-          .sort(byStopTimeIndexAscending);
+          .sort(byStopTimeIndexAscending)
+          .slice(0, 4);
+        if (filteredTimes.length < 1) {
+          console.warn("no times found");
+        }
         return { header, times: filteredTimes };
       })
       .then((stopTimes) => {
@@ -84,7 +95,7 @@ export const StopTimeReport: FC = () => {
       {!isLoaded && <div className="loading">{"loading..."}</div>}
       {data && (
         <div className="header centerAlignedColumn">
-          <div className="stopNameLabel">{data.header.name}</div>
+          <div className="stopNameLabel">{data.header.busStop}</div>
           <div className="destinationLabel">{data.header.dest}</div>
         </div>
       )}
@@ -92,18 +103,24 @@ export const StopTimeReport: FC = () => {
         <div className="stopTimeList centerAlignedColumn">
           {data.times.map((item, i) => {
             console.log(item);
+            const fontSize = 64 - 12.8 * i;
             return (
               <div
-                key={item.index}
+                key={`${item.index}-${item.note}`}
                 style={{
-                  fontSize: `${64 - 12.8 * i}px`,
+                  fontSize: `${fontSize}px`,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "baseline",
                 }}
                 className={i === 0 ? "firstTime" : "laterTime"}
               >
-                <span>{item.hour}</span>
-                <span>:</span>
-                <span>{item.minute}</span>
-                <br></br>
+                <div>{item.hour}</div>
+                <div>:</div>
+                <div>{item.minute}</div>
+                {item.note && (
+                  <div className="stopTimeNote">{` (${item.note})`}</div>
+                )}
               </div>
             );
           })}
