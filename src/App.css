@@ -22,7 +22,7 @@
   padding-top: 20px;
 }
 
-@keyframes LoadingThrob {
+@keyframes loadingThrob {
   from {
     opacity: 1;
   }
@@ -37,7 +37,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .loading {
-    animation: LoadingThrob infinite alternate 1s linear;
+    animation: loadingThrob infinite alternate 1s linear;
   }
 }
 
@@ -120,4 +120,21 @@
 
 .currentTime {
   color: white;
+}
+
+@keyframes colonThrob {
+  from {
+    opacity: 1;
+    text-shadow: 0 0 3px white;
+  }
+  to {
+    opacity: 0.5;
+    text-shadow: 0 0 0px white;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .currentTimeColon {
+    animation: colonThrob infinite alternate 2s ease-in;
+  }
 }

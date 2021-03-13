@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { CurrentTime } from "./CurrentTime";
 
 type StopTime = {
   index: number;
@@ -51,6 +52,8 @@ const queryParams = (): StopTimeQueryParams => {
   const now = new Date();
   const index = now.getHours() * 60 + now.getMinutes();
   const label = getTodaysLabel(now.getDay());
+  // const index = 504;
+  // const label = 0;
   return { index, label };
 };
 
@@ -61,7 +64,7 @@ export const BusStopHeader: FC<{ headerData: StopReportHeader }> = ({
     <div className="header centerAlignedColumn">
       <div className="stopNameLabel">{busStop}</div>
       <div className="destinationLabel">{dest}</div>
-      <div className="currentTime">{"08:13"}</div>
+      <CurrentTime />
     </div>
   );
 };
