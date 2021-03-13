@@ -3,7 +3,7 @@ import "./App.css";
 import { BusStopHeader, StopReport, StopTimeList } from "./components/StopTimeReport";
 
 const { search } = window.location;
-const queryString = search.length > 0 ? search : "dest=Totsuka";
+const queryString = search.length > 0 ? search : "?dest=Totsuka";
 
 const kUrl =
   "https://script.google.com/macros/s/" +
@@ -23,8 +23,9 @@ function App() {
     window
       .fetch(kUrl)
       .then((resp) => {
-        return resp.json();
+        return resp.text();
       })
+      .then(JSON.parse)
       .then((report: StopReport) => {
         const { header, times } = report;
 
