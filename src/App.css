@@ -9,6 +9,7 @@
   --black700: #26282e;
   --black500: #373740;
   --black300: #424247;
+  --roundSanSerif: "Kosugi Maru", sans-serif;
 }
 .App {
   background-color: var(--black500);
@@ -16,9 +17,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  padding-top: 20px;
 }
 
 @keyframes LoadingThrob {
@@ -48,32 +49,55 @@
 
 .header {
   margin: 10px;
-  font-size: 32px;
+  font-size: 2em;
+  font-family: var(--roundSanSerif);
+  line-height: 1.4em;
 }
 
 .destinationLabel {
   color: var(--green700);
+  font-size: 0.8em;
 }
 
 .stopTimeList {
   background-color: var(--black700);
+  border-radius: 4px;
+  border: 1px solid var(--black300);
   padding: 10px;
+  font-family: var(--roundSanSerif);
 }
 
-.firstTime {
+.stopTimeRow {
+  color: var(--green300);
+  display: grid;
+  grid-template-columns: 44% 10% min-content auto;
+  padding: 8px;
+}
+
+.stopTimeRow:first-child {
   color: var(--green700);
 }
 
-.laterTime {
-  color: var(--green300);
+.hour {
+  text-align: right;
 }
 
-.stopTimeNote {
-  font-size: 12px;
+.colon {
+  text-align: center;
+}
+
+.minuteAndNote {
+  display: flex;
+  align-items: baseline;
 }
 
 .relative {
   position: static;
+}
+
+.stopTimeNote {
+  font-size: 12px;
+  margin-left: 0.5em;
 }
 
 .countDown {
@@ -81,9 +105,9 @@
   top: 0;
   height: 100vh;
   left: 0;
-  width: 50px;
+  width: 30px;
   box-sizing: border-box;
-  border-right: 20px solid var(--black700);
+  border-right: 10px solid var(--black700);
   background-color: var(--black700);
   background: repeating-linear-gradient(
     180deg,
@@ -92,4 +116,8 @@
     var(--black700) 1px,
     var(--black700) calc(5vh - 2px)
   );
+}
+
+.currentTime {
+  color: var(--amber500);
 }

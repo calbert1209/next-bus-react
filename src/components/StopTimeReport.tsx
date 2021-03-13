@@ -91,36 +91,36 @@ export const StopTimeReport: FC = () => {
   }, [isLoaded]);
 
   return (
-    <div>
+    <div className="stopTimeReport">
       {!isLoaded && <div className="loading">{"loading..."}</div>}
       {data && (
         <div className="header centerAlignedColumn">
           <div className="stopNameLabel">{data.header.busStop}</div>
           <div className="destinationLabel">{data.header.dest}</div>
+          <div className="currentTime">{"08:13"}</div>
         </div>
       )}
       {data && data.times.length > 0 && (
-        <div className="stopTimeList centerAlignedColumn">
+        <div className="stopTimeList">
           {data.times.map((item, i) => {
             console.log(item);
-            const fontSize = 64 - 12.8 * i;
             return (
               <div
                 key={`${item.index}-${item.note}`}
+                className="stopTimeRow"
+                data-row={i}
                 style={{
-                  fontSize: `${fontSize}px`,
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "baseline",
+                  fontSize: `${4 - i}em`,
                 }}
-                className={i === 0 ? "firstTime" : "laterTime"}
               >
-                <div>{item.hour}</div>
-                <div>:</div>
-                <div>{item.minute}</div>
-                {item.note && (
-                  <div className="stopTimeNote">{` (${item.note})`}</div>
-                )}
+                <div className="hour">{item.hour}</div>
+                <div className="colon">:</div>
+                <div className="minuteAndNote">
+                  <div className="minute">{item.minute}</div>
+                  {item.note && (
+                    <div className="stopTimeNote">{` (${item.note})`}</div>
+                  )}
+                </div>
               </div>
             );
           })}
