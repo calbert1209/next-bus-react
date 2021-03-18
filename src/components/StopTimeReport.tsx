@@ -1,5 +1,6 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import { CurrentTime } from "./CurrentTime";
+import { Modal } from "./Modal";
 
 type StopTime = {
   index: number;
@@ -79,6 +80,9 @@ export const StopTimeList: FC<{ fullList: StopTime[] }> = ({ fullList }) => {
   if (times.length < 1) {
     console.warn("no times found");
   }
+
+  const modalMountPoint = document.getElementById("modalMountPoint");
+
   return (
     <div className="stopTimeList">
       {times.map((item, i) => {

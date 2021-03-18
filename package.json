@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "next-bus-react",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -21,8 +21,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "fmt": "prettier -w ./src/**/*.ts*",
-    "fmt-css": "prettier -w ./src/**/*.css"
+    "fmt": "prettier -w ./src/**/*.{ts,tsx,css}",
+    "fmt-public": "prettier -w ./public/**/*.html"
   },
   "eslintConfig": {
     "extends": [

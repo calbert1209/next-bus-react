@@ -50,7 +50,8 @@ function App() {
           <StopTimeList fullList={data.times} />
         </>
       )}
-    </div>
+      </div>
+      <div id="modalMountPoint" />
     </div>
   );
 }

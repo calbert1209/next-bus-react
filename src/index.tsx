@@ -4,6 +4,10 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+// FROM: https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
+let vh = (window.innerHeight + 20) * 0.01;
+document.documentElement.style.setProperty('--vh', `${vh}px`);
+
 ReactDOM.render(
   <React.StrictMode>
     <App />
