@@ -17,11 +17,11 @@
   --blue900: #0d47a1;
   --deepOrange300: #ff7043;
   --amber500: #ffc107;
-  --black700: hsl(240, 10%, 19%);
-  --black500: hsl(240, 8%, 23%);
-  --black300: hsl(240, 4%, 27%);
-  --black100: hsl(240, 0%, 31%);
-  --black50: hsl(240, 0%, 41%);
+  --black700: #2c2c35;
+  --black500: #36363f;
+  --black300: #424248;
+  --black100: #4f4f4f;
+  --black50: #696969;
   --roundSanSerif: "Kosugi Maru", sans-serif;
 }
 
@@ -103,7 +103,7 @@
   width: 30px;
   height: 30px;
   background-color: var(--black300);
-  border-radius: 10%;
+  border-radius: 4px;
 }
 
 .swapArrow {

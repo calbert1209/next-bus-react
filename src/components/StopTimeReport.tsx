@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { CurrentTime } from "./CurrentTime";
 
 type StopTime = {
@@ -50,10 +50,10 @@ type StopTimeQueryParams = {
 
 const queryParams = (): StopTimeQueryParams => {
   const now = new Date();
-  // const index = now.getHours() * 60 + now.getMinutes();
-  // const label = getTodaysLabel(now.getDay());
-  const index = 504;
-  const label = 0;
+  const index = now.getHours() * 60 + now.getMinutes();
+  const label = getTodaysLabel(now.getDay());
+  // const index = 504;
+  // const label = 0;
   return { index, label };
 };
 
@@ -65,7 +65,7 @@ export const BusStopHeader: FC<{ headerData: StopReportHeader }> = ({
       <div className="stopNameLabel">{busStop}</div>
       <div className="destinationDisplay">
         <div className="destinationLabel">{dest}</div>
-        <SwapIcon />
+        <SwapDestinationButton />
       </div>
       <CurrentTime />
     </div>
@@ -83,7 +83,7 @@ export const StopTimeList: FC<{ fullList: StopTime[] }> = ({ fullList }) => {
     console.warn("no times found");
   }
 
-  const modalMountPoint = document.getElementById("modalMountPoint");
+  // const modalMountPoint = document.getElementById("modalMountPoint");
 
   return (
     <div className="stopTimeList">
@@ -113,9 +113,36 @@ export const StopTimeList: FC<{ fullList: StopTime[] }> = ({ fullList }) => {
   );
 };
 
-const SwapIcon: FC = () => {
+type Destination = "totsuka" | "ofuna";
+type VoidFunc = () => void;
+
+function containsOfuna(n: string) {
+  return /ofuna/g.test(n);
+}
+
+const SwapDestinationButton: FC = () => {
+  const [dest, setDest] = useState<Destination>(() => {
+    const { search } = window.location;
+    return containsOfuna(search) ? "ofuna" : "totsuka";
+  });
+
+  useEffect(() => {
+    const nextSearch = `?dest=${dest}`;
+    if (window.location.search !== nextSearch) {
+      window.location.search = nextSearch;
+    }
+  }, [dest]);
+
+  const onClick = () => {
+    setDest((s) => (containsOfuna(s) ? "totsuka" : "ofuna"));
+  };
+
+  return <SwapIcon onClick={onClick} />;
+};
+
+const SwapIcon: FC<{ onClick?: VoidFunc }> = ({ onClick }) => {
   return (
-    <div className="swapIcon" role="button">
+    <div className="swapIcon" role="button" onClick={onClick}>
       <div className="swapArrow top">→</div>
       <div className="swapArrow bottom">←</div>
     </div>
