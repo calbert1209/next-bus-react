@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/next-bus-react/static/css/main.67da34dc.chunk.css",
+    "main.js": "/next-bus-react/static/js/main.881893d0.chunk.js",
+    "main.js.map": "/next-bus-react/static/js/main.881893d0.chunk.js.map",
+    "runtime-main.js": "/next-bus-react/static/js/runtime-main.af82b94b.js",
+    "runtime-main.js.map": "/next-bus-react/static/js/runtime-main.af82b94b.js.map",
+    "static/js/2.c2dc0584.chunk.js": "/next-bus-react/static/js/2.c2dc0584.chunk.js",
+    "static/js/2.c2dc0584.chunk.js.map": "/next-bus-react/static/js/2.c2dc0584.chunk.js.map",
+    "static/js/3.06644ea6.chunk.js": "/next-bus-react/static/js/3.06644ea6.chunk.js",
+    "static/js/3.06644ea6.chunk.js.map": "/next-bus-react/static/js/3.06644ea6.chunk.js.map",
+    "index.html": "/next-bus-react/index.html",
+    "static/css/main.67da34dc.chunk.css.map": "/next-bus-react/static/css/main.67da34dc.chunk.css.map",
+    "static/js/2.c2dc0584.chunk.js.LICENSE.txt": "/next-bus-react/static/js/2.c2dc0584.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.af82b94b.js",
+    "static/js/2.c2dc0584.chunk.js",
+    "static/css/main.67da34dc.chunk.css",
+    "static/js/main.881893d0.chunk.js"
+  ]
+}
