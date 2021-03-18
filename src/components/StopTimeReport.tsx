@@ -1,6 +1,5 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { CurrentTime } from "./CurrentTime";
-import { Modal } from "./Modal";
 
 type StopTime = {
   index: number;
@@ -51,10 +50,10 @@ type StopTimeQueryParams = {
 
 const queryParams = (): StopTimeQueryParams => {
   const now = new Date();
-  const index = now.getHours() * 60 + now.getMinutes();
-  const label = getTodaysLabel(now.getDay());
-  // const index = 504;
-  // const label = 0;
+  // const index = now.getHours() * 60 + now.getMinutes();
+  // const label = getTodaysLabel(now.getDay());
+  const index = 504;
+  const label = 0;
   return { index, label };
 };
 
@@ -64,7 +63,10 @@ export const BusStopHeader: FC<{ headerData: StopReportHeader }> = ({
   return (
     <div className="header centerAlignedColumn">
       <div className="stopNameLabel">{busStop}</div>
-      <div className="destinationLabel">{dest}</div>
+      <div className="destinationDisplay">
+        <div className="destinationLabel">{dest}</div>
+        <SwapIcon />
+      </div>
       <CurrentTime />
     </div>
   );
@@ -107,6 +109,15 @@ export const StopTimeList: FC<{ fullList: StopTime[] }> = ({ fullList }) => {
           </div>
         );
       })}
+    </div>
+  );
+};
+
+const SwapIcon: FC = () => {
+  return (
+    <div className="swapIcon" role="button">
+      <div className="swapArrow top">→</div>
+      <div className="swapArrow bottom">←</div>
     </div>
   );
 };

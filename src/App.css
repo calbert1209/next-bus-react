@@ -17,10 +17,16 @@
   --blue900: #0d47a1;
   --deepOrange300: #ff7043;
   --amber500: #ffc107;
-  --black700: #26282e;
-  --black500: #373740;
-  --black300: #424247;
+  --black700: hsl(240, 10%, 19%);
+  --black500: hsl(240, 8%, 23%);
+  --black300: hsl(240, 4%, 27%);
+  --black100: hsl(240, 0%, 31%);
+  --black50: hsl(240, 0%, 41%);
   --roundSanSerif: "Kosugi Maru", sans-serif;
+}
+
+*[role="button"] {
+  cursor: pointer;
 }
 
 .App {
@@ -79,9 +85,33 @@
   line-height: 1.4em;
 }
 
+.destinationDisplay {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
 .destinationLabel {
   color: var(--primary700);
   font-size: 0.8em;
+}
+
+.swapIcon {
+  margin-left: 10px;
+  padding: 10px;
+  width: 30px;
+  height: 30px;
+  background-color: var(--black300);
+  border-radius: 10%;
+}
+
+.swapArrow {
+  line-height: 0.6;
+  font-size: 50%;
+  font-weight: 700;
+  user-select: none;
+  color: var(--primary300);
 }
 
 .stopTimeList {
