@@ -93,7 +93,7 @@
 }
 
 .destinationLabel {
-  color: var(--primary700);
+  color: var(--primary300);
   font-size: 0.8em;
 }
 
@@ -104,6 +104,10 @@
   height: 30px;
   background-color: var(--black300);
   border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .swapArrow {
@@ -122,14 +126,14 @@
 }
 
 .stopTimeRow {
-  color: var(--primary300);
+  color: var(--primary700);
   display: grid;
   grid-template-columns: 44% 10% min-content auto;
   padding: 8px;
 }
 
 .stopTimeRow:first-child {
-  color: var(--primary700);
+  color: var(--primary300);
 }
 
 .hour {

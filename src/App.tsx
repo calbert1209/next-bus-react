@@ -9,8 +9,9 @@ const kScriptId = "AKfycbzhVQD402fi91IlcT9tndtmAvspn2V6noTkh9465JOuUtUcPyoWjhvgk
 type Destination = "totsuka" | "ofuna";
 
 function currentIndex(): number {
-  const now = new Date();
-  return (now.getHours() * 60) + now.getMinutes();
+  // const now = new Date();
+  // return (now.getHours() * 60) + now.getMinutes();
+  return 540;
 }
 
 function getDestination(search: string) {
