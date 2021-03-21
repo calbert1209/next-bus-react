@@ -20,42 +20,8 @@ export type StopReport = {
   times: StopTime[];
 };
 
-function getTodaysLabel(dayofWeek: number) {
-  if (dayofWeek > 0 && dayofWeek < 6) {
-    return 0;
-  } else if (dayofWeek === 6) {
-    return 1;
-  } else if (dayofWeek === 0) {
-    return 2;
-  } else {
-    throw new Error("invalid arg: dayOfWeek must be between 0 ~ 6");
-  }
-}
-
 const byStopTimeIndexAscending = (a: StopTime, b: StopTime): number =>
   a.index - b.index;
-
-const stopTimeQuery = ({ index, label }: StopTimeQueryParams) => (
-  time: StopTime
-) => {
-  return (
-    time.label === label && time.index > index && time.index <= index + 120
-  );
-};
-
-type StopTimeQueryParams = {
-  index: number;
-  label: number;
-};
-
-const queryParams = (): StopTimeQueryParams => {
-  const now = new Date();
-  const index = now.getHours() * 60 + now.getMinutes();
-  const label = getTodaysLabel(now.getDay());
-  // const index = 504;
-  // const label = 0;
-  return { index, label };
-};
 
 export const BusStopHeader: FC<{ headerData: StopReportHeader }> = ({
   headerData: { busStop, dest },
@@ -72,11 +38,12 @@ export const BusStopHeader: FC<{ headerData: StopReportHeader }> = ({
   );
 };
 
-export const StopTimeList: FC<{ fullList: StopTime[] }> = ({ fullList }) => {
-  const params = queryParams();
-
-  const times = fullList
-    .filter(stopTimeQuery(params))
+export const StopTimeList: FC<{ stopTimes: StopTime[]; index: number }> = ({
+  stopTimes,
+  index,
+}) => {
+  const times = stopTimes
+    .filter((time) => time.index >= index)
     .sort(byStopTimeIndexAscending)
     .slice(0, 4);
   if (times.length < 1) {

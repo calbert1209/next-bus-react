@@ -2,26 +2,43 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import { BusStopHeader, StopReport, StopTimeList } from "./components/StopTimeReport";
 
-const { search } = window.location;
-const queryString = search.length > 0 ? search : "?dest=Totsuka";
+// HACK: Yeah, I know that it looks like I'm exposing a app secret. 
+const kScriptId = "AKfycbzhVQD402fi91IlcT9tndtmAvspn2V6noTkh9465JOuUtUcPyoWjhvgkFuQcmC26tPQ3A";
 
-const kUrl =
-  "https://script.google.com/macros/s/" +
-  "AKfycbwdm0nmrVJdptlecVeL0VrGfLJz2DyJ65qv-aFcixFtB5-kyJ0rfJLE7yBShRlM0B14tg/exec" +
-  `${queryString}`;
+// TODO: need something more maintainable
+type Destination = "totsuka" | "ofuna";
 
+function currentIndex(): number {
+  const now = new Date();
+  return (now.getHours() * 60) + now.getMinutes();
+}
+
+function getDestination(search: string) {
+  return /ofuna/g.test(search.toLowerCase()) ? "ofuna" : "totsuka";
+}
+
+function generateUrl(dest: Destination, index: number) {
+  const queryString = `?dest=${dest}&index=${index}`;
+  return `https://script.google.com/macros/s/${kScriptId}/exec${queryString}`
+}
 
 function App() {
 
   const [isLoaded, setLoaded] = useState(false);
   const [data, setData] = useState<StopReport | null>(null);
+  const [destination, setDestination] = useState<Destination>("totsuka");
+  // eslint-disable-next-line
+  const [timeIndex, setTimeIndex] = useState(currentIndex());
 
   useEffect(() => {
     if (isLoaded) {
       return;
     }
+    const dest = getDestination(document.location.search);
+    setDestination(dest);
+    const url = generateUrl(dest, timeIndex);
     window
-      .fetch(kUrl)
+      .fetch(url)
       .then((resp) => {
         return resp.text();
       })
@@ -35,19 +52,16 @@ function App() {
         setLoaded(true);
         setData(stopTimes);
       });
-  }, [isLoaded]);
-
-  const [_unused, rawDest] = queryString.split("=");
-  const dest = rawDest.toLowerCase() ?? "totsuka";
+  }, [isLoaded, timeIndex]);
   
   return (
-    <div className="App" data-dest={dest}>
+    <div className="App" data-dest={destination}>
       <div className="stopTimeReport">
       {!isLoaded && <div className="loading">{"loading..."}</div>}
       {data && (
         <>
           <BusStopHeader headerData={data.header} />
-          <StopTimeList fullList={data.times} />
+          <StopTimeList stopTimes={data.times} index={timeIndex} />
         </>
       )}
       </div>
