@@ -2,16 +2,15 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import { BusStopHeader, StopReport, StopTimeList } from "./components/StopTimeReport";
 
-// HACK: Yeah, I know that it looks like I'm exposing a app secret. 
+// HACK:  Yeah, I know that it looks like I'm exposing a app secret.
 const kScriptId = "AKfycbzhVQD402fi91IlcT9tndtmAvspn2V6noTkh9465JOuUtUcPyoWjhvgkFuQcmC26tPQ3A";
 
 // TODO: need something more maintainable
 type Destination = "totsuka" | "ofuna";
 
 function currentIndex(): number {
-  // const now = new Date();
-  // return (now.getHours() * 60) + now.getMinutes();
-  return 540;
+  const now = new Date();
+  return (now.getHours() * 60) + now.getMinutes();
 }
 
 function getDestination(search: string) {

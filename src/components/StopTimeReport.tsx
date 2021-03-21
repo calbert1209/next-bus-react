@@ -23,6 +23,8 @@ export type StopReport = {
 const byStopTimeIndexAscending = (a: StopTime, b: StopTime): number =>
   a.index - b.index;
 
+const doubleDigitString = (x: number) => `${x < 10 ? "0" : ""}${x}`;
+
 export const BusStopHeader: FC<{ headerData: StopReportHeader }> = ({
   headerData: { busStop, dest },
 }) => {
@@ -55,7 +57,6 @@ export const StopTimeList: FC<{ stopTimes: StopTime[]; index: number }> = ({
   return (
     <div className="stopTimeList">
       {times.map((item, i) => {
-        console.log(item);
         return (
           <div
             key={`${item.index}-${item.note}`}
@@ -66,13 +67,15 @@ export const StopTimeList: FC<{ stopTimes: StopTime[]; index: number }> = ({
             }}
           >
             <div className="hour">{item.hour}</div>
-            <div className="colon">:</div>
-            <div className="minuteAndNote">
-              <div className="minute">{item.minute}</div>
-              {item.note && (
-                <div className="stopTimeNote">{` (${item.note})`}</div>
-              )}
+            <div className="colon">
+              <div>{":"}</div>
             </div>
+            <div className="minute">{doubleDigitString(item.minute)}</div>
+            {item.note && (
+              <div className="stopTimeNote">
+                <div>{`(${item.note})`}</div>
+              </div>
+            )}
           </div>
         );
       })}
