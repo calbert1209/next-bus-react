@@ -1,5 +1,4 @@
-import { FC, useEffect, useState } from "react";
-import { getRoutePointsFromUrl, routePoints, RoutePoints } from "../App";
+import { FC } from "react";
 import { CurrentTime } from "./CurrentTime";
 
 type StopTime = {
@@ -26,15 +25,19 @@ const byStopTimeIndexAscending = (a: StopTime, b: StopTime): number =>
 
 const doubleDigitString = (x: number) => `${x < 10 ? "0" : ""}${x}`;
 
-export const BusStopHeader: FC<{ headerData: StopReportHeader }> = ({
-  headerData: { busStop, dest },
-}) => {
+export const BusStopHeader: FC<{
+  headerData: StopReportHeader;
+  swapDirection: () => void;
+  swapRoute: () => void;
+}> = ({ headerData: { busStop, dest }, swapDirection, swapRoute }) => {
   return (
     <div className="header centerAlignedColumn">
-      <div className="stopNameLabel">{busStop}</div>
+      <div className="stopNameLabel" role="button" onClick={swapRoute}>
+        {busStop}
+      </div>
       <div className="destinationDisplay">
         <div className="destinationLabel">{dest}</div>
-        <SwapDestinationButton />
+        <SwapIcon rotate={true} colored={true} onClick={swapDirection} />
       </div>
       <CurrentTime />
     </div>
@@ -84,38 +87,22 @@ export const StopTimeList: FC<{ stopTimes: StopTime[]; index: number }> = ({
   );
 };
 
-type VoidFunc = () => void;
+const SwapIcon: FC<{
+  rotate?: boolean;
+  colored?: boolean;
+  onClick?: () => void;
+}> = ({ rotate = false, colored = false, onClick }) => {
+  let cNames = ["swapIcon"];
+  if (rotate) {
+    cNames.push("rotate90");
+  }
+  if (colored) {
+    cNames.push("coloredArrow");
+  }
 
-const SwapDestinationButton: FC = () => {
-  const { href } = window.document.location;
-  const [points, setPoints] = useState<RoutePoints>(() =>
-    getRoutePointsFromUrl(href)
-  );
-
-  useEffect(() => {
-    setPoints(getRoutePointsFromUrl(href));
-  }, [href]);
-
-  useEffect(() => {
-    const nextSearch = points.search;
-    if (window.location.search !== nextSearch) {
-      window.location.search = nextSearch;
-    }
-  }, [points]);
-
-  const onClick = () => {
-    setPoints((s) => {
-      const end = s.end === "ofuna" ? "totsuka" : "ofuna";
-      return routePoints(s.start, end);
-    });
-  };
-
-  return <SwapIcon onClick={onClick} />;
-};
-
-const SwapIcon: FC<{ onClick?: VoidFunc }> = ({ onClick }) => {
+  const className = cNames.join(" ");
   return (
-    <div className="swapIcon" role="button" onClick={onClick}>
+    <div className={className} role="button" onClick={onClick}>
       <div className="swapArrow top">→</div>
       <div className="swapArrow bottom">←</div>
     </div>

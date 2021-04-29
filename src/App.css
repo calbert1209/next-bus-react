@@ -85,7 +85,8 @@
   line-height: 1.4em;
 }
 
-.destinationDisplay {
+.destinationDisplay,
+.startDisplay {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -110,11 +111,18 @@
   align-items: center;
 }
 
+.rotate90 {
+  transform: rotate(90deg);
+}
+
 .swapArrow {
   line-height: 0.6;
   font-size: 50%;
   font-weight: 700;
   user-select: none;
+}
+
+.coloredArrow {
   color: var(--primary300);
 }
 
