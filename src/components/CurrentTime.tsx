@@ -11,8 +11,8 @@ export const CurrentTime: FC = () => {
         hour: "2-digit",
         minute: "2-digit",
       }).format(now);
-      const nextTime = formatted.split(":");
-      setTime([nextTime[0], nextTime[1]]);
+      const [hour, minute] = formatted.split(":");
+      setTime([hour, minute]);
     }, 500);
 
     return () => {

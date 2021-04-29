@@ -4,7 +4,7 @@ import { BusStopHeader, StopReport, StopTimeList } from "./components/StopTimeRe
 
 // HACK:  Yeah, I know that it looks like I'm exposing an app secret.
 // The same script is publicly accessible anyway.
-const kScriptId = "AKfycby9xxDzbgVfk7bXDmzyqaPN4heFGo6qQb3kXaNgI5T-efrJGKYkWjbEGh9anUJn-o3zaA";
+const kScriptId = "AKfycbw3IFf_lsQCWbp6a5ckSYKPWXdLKdCThBU2xytDqjrfX7JJId3_BqALBnDZ_3MWaGBrDQ";
 
 function currentIndex(): number {
   const now = new Date();
