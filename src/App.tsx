@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import { BusStopHeader, StopReport, StopTimeList } from "./components/StopTimeReport";
 
-// HACK:  Yeah, I know that it looks like I'm exposing a app secret.
+// HACK:  Yeah, I know that it looks like I'm exposing an app secret.
 // The same script is publicly accessible anyway.
 const kScriptId = "AKfycby9xxDzbgVfk7bXDmzyqaPN4heFGo6qQb3kXaNgI5T-efrJGKYkWjbEGh9anUJn-o3zaA";
 
@@ -38,19 +38,32 @@ function generateUrl({start, end}: RoutePoints, index: number) {
 }
 
 function App() {
-
+  const { href } = window.document.location;
   const [isLoaded, setLoaded] = useState(false);
   const [data, setData] = useState<StopReport | null>(null);
-  const [destination, setDestination] = useState<string>("totsuka");
+  const [points, setPoints] = useState<RoutePoints>(() =>
+    getRoutePointsFromUrl(href)
+  );
   // eslint-disable-next-line
   const [timeIndex, setTimeIndex] = useState(currentIndex());
+
+  useEffect(() => {
+    setPoints(getRoutePointsFromUrl(href));
+  }, [href]);
+
+  useEffect(() => {
+    const nextSearch = points.search;
+    if (window.location.search !== nextSearch) {
+      window.location.search = nextSearch;
+    }
+  }, [points]);
 
   useEffect(() => {
     if (isLoaded) {
       return;
     }
     const points = getRoutePointsFromUrl(document.location.href);
-    setDestination(points.end);
+    setPoints(points);
     const url = generateUrl(points, timeIndex);
     window
       .fetch(url)
@@ -68,14 +81,33 @@ function App() {
         setData(stopTimes);
       });
   }, [isLoaded, timeIndex]);
-  
+
+  const swapDirection = () => {
+    setPoints(s => routePoints(s.end, s.start))
+  }
+
+  const swapRoute = () => {
+    setPoints(s => {
+      if (s.start === "ofuna") {
+        return routePoints("totsuka", s.end);
+      } else if (s.start === "totsuka") {
+        return routePoints("ofuna", s.end);
+      } else {
+        const nextEnd = s.end === "ofuna" ? "totsuka" : "ofuna";
+        return routePoints(s.start, nextEnd);
+      }
+    });
+  }
+
+  const {start, end} = points;
+  const destination = (start === "ofuna" || end === "ofuna") ? "ofuna" : "totsuka";
   return (
     <div className="App" data-dest={destination}>
       <div className="stopTimeReport">
       {!isLoaded && <div className="loading">{"loading..."}</div>}
       {data && (
         <>
-          <BusStopHeader headerData={data.header} />
+          <BusStopHeader headerData={data.header} swapDirection={swapDirection} swapRoute={swapRoute} />
           <StopTimeList stopTimes={data.times} index={timeIndex} />
         </>
       )}
