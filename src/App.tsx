@@ -3,22 +3,38 @@ import "./App.css";
 import { BusStopHeader, StopReport, StopTimeList } from "./components/StopTimeReport";
 
 // HACK:  Yeah, I know that it looks like I'm exposing a app secret.
-const kScriptId = "AKfycbzhVQD402fi91IlcT9tndtmAvspn2V6noTkh9465JOuUtUcPyoWjhvgkFuQcmC26tPQ3A";
-
-// TODO: need something more maintainable
-type Destination = "totsuka" | "ofuna";
+// The same script is publicly accessible anyway.
+// const kScriptId = "AKfycbzhVQD402fi91IlcT9tndtmAvspn2V6noTkh9465JOuUtUcPyoWjhvgkFuQcmC26tPQ3A";
+const kScriptId = "AKfycby9xxDzbgVfk7bXDmzyqaPN4heFGo6qQb3kXaNgI5T-efrJGKYkWjbEGh9anUJn-o3zaA";
 
 function currentIndex(): number {
   const now = new Date();
   return (now.getHours() * 60) + now.getMinutes();
 }
 
-function getDestination(search: string) {
-  return /ofuna/g.test(search.toLowerCase()) ? "ofuna" : "totsuka";
+export type RoutePoints = {
+  start: string;
+  end: string;
+  search: string;
 }
 
-function generateUrl(dest: Destination, index: number) {
-  const queryString = `?dest=${dest}&index=${index}`;
+export function routePoints(start: string, end: string): RoutePoints {
+  return {
+    start,
+    end,
+    search: `?start=${start}&end=${end}`
+  }
+}
+
+export function getRoutePointsFromUrl(url: string): RoutePoints {
+  const params = new URL(url).searchParams;
+  const start = params.get("start") ?? "kanai";
+  const end = params.get("end") ?? params.get("dest") ?? "totsuka";
+  return routePoints(start, end);
+}
+
+function generateUrl({start, end}: RoutePoints, index: number) {
+  const queryString = `?start=${start}&end=${end}&index=${index}`;
   return `https://script.google.com/macros/s/${kScriptId}/exec${queryString}`
 }
 
@@ -26,7 +42,7 @@ function App() {
 
   const [isLoaded, setLoaded] = useState(false);
   const [data, setData] = useState<StopReport | null>(null);
-  const [destination, setDestination] = useState<Destination>("totsuka");
+  const [destination, setDestination] = useState<string>("totsuka");
   // eslint-disable-next-line
   const [timeIndex, setTimeIndex] = useState(currentIndex());
 
@@ -34,9 +50,9 @@ function App() {
     if (isLoaded) {
       return;
     }
-    const dest = getDestination(document.location.search);
-    setDestination(dest);
-    const url = generateUrl(dest, timeIndex);
+    const points = getRoutePointsFromUrl(document.location.href);
+    setDestination(points.end);
+    const url = generateUrl(points, timeIndex);
     window
       .fetch(url)
       .then((resp) => {
