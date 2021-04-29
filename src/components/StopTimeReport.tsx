@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from "react";
+import { getRoutePointsFromUrl, routePoints, RoutePoints } from "../App";
 import { CurrentTime } from "./CurrentTime";
 
 type StopTime = {
@@ -83,28 +84,30 @@ export const StopTimeList: FC<{ stopTimes: StopTime[]; index: number }> = ({
   );
 };
 
-type Destination = "totsuka" | "ofuna";
 type VoidFunc = () => void;
 
-function containsOfuna(n: string) {
-  return /ofuna/g.test(n);
-}
-
 const SwapDestinationButton: FC = () => {
-  const [dest, setDest] = useState<Destination>(() => {
-    const { search } = window.location;
-    return containsOfuna(search) ? "ofuna" : "totsuka";
-  });
+  const { href } = window.document.location;
+  const [points, setPoints] = useState<RoutePoints>(() =>
+    getRoutePointsFromUrl(href)
+  );
 
   useEffect(() => {
-    const nextSearch = `?dest=${dest}`;
+    setPoints(getRoutePointsFromUrl(href));
+  }, [href]);
+
+  useEffect(() => {
+    const nextSearch = points.search;
     if (window.location.search !== nextSearch) {
       window.location.search = nextSearch;
     }
-  }, [dest]);
+  }, [points]);
 
   const onClick = () => {
-    setDest((s) => (containsOfuna(s) ? "totsuka" : "ofuna"));
+    setPoints((s) => {
+      const end = s.end === "ofuna" ? "totsuka" : "ofuna";
+      return routePoints(s.start, end);
+    });
   };
 
   return <SwapIcon onClick={onClick} />;
